@@ -47,6 +47,12 @@ class CPU:
             0b10100111: self.cmp # ALU compare
         }
 
+
+    def pcinc(self, opcode):
+        # Get the PC increment
+        opsize = int((opcode & 0b11000000) >> 6)
+        self.pc += (opsize + 1)
+
     ### CPU opcodes ###
     # LDI: Load immediate = Load the data in mdr into the register specified in mar
     def ldi(self, mar, mdr):
@@ -63,20 +69,19 @@ class CPU:
     # Subroutine and functions opcodes
     #----------------------------------
     def jmp(self, mar, mdr):
-        print(f'jmp mar = {bin(mar)}')
-        self.pc = mar
+        self.pc = self.reg[mar]
 
     def jeq(self, mar, mdr):
-        print(f'self.fl = {bin(self.fl)}')
-        print(f'jeq mar = {bin(mar)}')
         if self.fl == 0b0000001:
             self.pc = self.reg[mar]
+        else:
+            self.pc += 2
             
-
     def jne(self, mar, mdr):
-        print(f'jne mar = {bin(mar)}')
-        if self.fl == 0b00000010:
-            self.pc = mar
+        if self.fl == 0b0000010:
+            self.pc = self.reg[mar]
+        else:
+            self.pc += 2
 
 
     # ALU Opcode definitions
@@ -107,11 +112,6 @@ class CPU:
    # Write the value (mdr) the value stored in memory location adr
     def ram_write(self, mdr, mar):
         self.ram[mar] = mdr
-
-    def pcinc(self, opcode):
-        # Get the PC increment
-        opsize = int((opcode & 0b11000000) >> 6)
-        self.pc += (opsize + 1)
 
     # def isalu(self, opcode):
     #     # Mask and shift for the ALU selection 
@@ -145,7 +145,6 @@ class CPU:
     def run(self):
         while True:
             # Initialize the program
-            print(f'self.ram[self.pc] = {bin(self.ram[self.pc])}')
             self.ir = self.ram[self.pc]
             # Get the alu and PC set mask
             # is_alu = (self.ir & 0b00100000) >> 5
@@ -157,11 +156,10 @@ class CPU:
             op_b = self.ram[self.pc + 2]
 
             # Execute the opcode in the opcode dict
+
             self.opcodes[self.ir](op_a, op_b)
-            print(f'Back from opcode. PC = {bin(self.pc)}')
             # Increment or set the PC
             if set_pc == 0:
-            # print(f'pc = {self.pc}')
                 self.pcinc(self.ir)
 
 
