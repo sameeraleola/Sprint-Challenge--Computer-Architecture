@@ -63,13 +63,18 @@ class CPU:
     # Subroutine and functions opcodes
     #----------------------------------
     def jmp(self, mar, mdr):
+        print(f'jmp mar = {bin(mar)}')
         self.pc = mar
 
     def jeq(self, mar, mdr):
+        print(f'self.fl = {bin(self.fl)}')
+        print(f'jeq mar = {bin(mar)}')
         if self.fl == 0b0000001:
-            self.pc = mar
+            self.pc = self.reg[mar]
+            
 
     def jne(self, mar, mdr):
+        print(f'jne mar = {bin(mar)}')
         if self.fl == 0b00000010:
             self.pc = mar
 
@@ -140,6 +145,7 @@ class CPU:
     def run(self):
         while True:
             # Initialize the program
+            print(f'self.ram[self.pc] = {bin(self.ram[self.pc])}')
             self.ir = self.ram[self.pc]
             # Get the alu and PC set mask
             # is_alu = (self.ir & 0b00100000) >> 5
@@ -152,13 +158,11 @@ class CPU:
 
             # Execute the opcode in the opcode dict
             self.opcodes[self.ir](op_a, op_b)
-
+            print(f'Back from opcode. PC = {bin(self.pc)}')
             # Increment or set the PC
             if set_pc == 0:
             # print(f'pc = {self.pc}')
                 self.pcinc(self.ir)
-            else:
-                self.pc = self.reg[2]
 
 
     # Implement the ALU
