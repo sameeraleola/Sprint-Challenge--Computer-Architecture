@@ -44,7 +44,7 @@ class CPU:
             0b10100000: self.add, # ALU add
             0b10100001: self.sub, # ALU subtract
             0b10100010: self.mul, # ALU multiple 4th bit defines set (0) for increment or jump (1)
-            0b10100111: self.cmp,# ALU compare
+            0b10100111: self.cmp # ALU compare
         }
 
     ### CPU opcodes ###
@@ -90,6 +90,8 @@ class CPU:
 
     # CMP: Compare in ALU
     def cmp(self, mar, mdr):
+        mar = self.reg[mar]
+        mdr = self.reg[mdr]
         self.alu("CMP", mar, mdr)
 
     
@@ -139,10 +141,10 @@ class CPU:
         while True:
             # Initialize the program
             self.ir = self.ram[self.pc]
-
             # Get the alu and PC set mask
             # is_alu = (self.ir & 0b00100000) >> 5
             set_pc = (self.ir & 0b00010000) >> 4
+            # print(f'set_pc = {set_pc}')
 
             # Cache the first two values in memory
             op_a = self.ram[self.pc + 1]
@@ -152,8 +154,11 @@ class CPU:
             self.opcodes[self.ir](op_a, op_b)
 
             # Increment or set the PC
-            if not set_pc:
+            if set_pc == 0:
+            # print(f'pc = {self.pc}')
                 self.pcinc(self.ir)
+            else:
+                self.pc = self.reg[2]
 
 
     # Implement the ALU
@@ -169,10 +174,8 @@ class CPU:
             self.reg[reg_a] *= self.reg[reg_b]
 
         elif op == "CMP":
-            if self.reg[reg_a] == self.reg[reg_b]:
+            if reg_a == reg_b:
                 self.fl = 0b0000001
-            # elif self.reg[reg_a] < self.reg[reg_b]:
-            #     self.fl = 0b0000010
             else:
                 self.fl = 0b00000010
         else:
