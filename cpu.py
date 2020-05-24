@@ -1,8 +1,5 @@
 """
-Day 2: Add the ability to load files dynamically, get mult.ls8 running
- x Un-hardcode the machine code
- x Implement the load() function to load an .ls8 file given the filename passed in as an argument
- Implement a Multiply instruction (run mult.ls8)
+Computer-Architecture Sprint Challenge
 """
 import sys
 
@@ -112,13 +109,7 @@ class CPU:
    # Write the value (mdr) the value stored in memory location adr
     def ram_write(self, mdr, mar):
         self.ram[mar] = mdr
-
-    # def isalu(self, opcode):
-    #     # Mask and shift for the ALU selection 
-    #     ALUMASK = 0b00100000
-    #     # if ((opcode & ALUMASK))
-    #     print(f'aluflag = {(opcode & ALUMASK) >> 5}')
-    #     print(f'Here is the ALU bit: {self.alubit}')       
+      
 
     # Load program from an external file
     def load(self, programfile):
@@ -137,9 +128,6 @@ class CPU:
                 self.ram[address] = prog_step
                 # print(f'ram[{address}] = {self.ram[address]}')
                 address += 1
-
-            # is_alu = (self.ir & 0b00100000) >> 5)
-            # set_pc = (self.ir & 0b00010000) >> 4) 
 
     # Run the CPU
     def run(self):
@@ -202,7 +190,3 @@ class CPU:
             print(" %02X" % self.reg[i], end='')
 
         print()
-
-    # def run(self):
-    #     """Run the CPU."""
-    #     pass
