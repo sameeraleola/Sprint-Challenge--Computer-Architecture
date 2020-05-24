@@ -119,14 +119,12 @@ class CPU:
         # Open and parsee the program file
         with open(programfile) as program:
             for instruction in program:
-                # print(f'instruction read = {instruction}')
                 line_read = instruction.split("#")[0].strip()
                 if line_read == '':
                     continue
                 prog_step = int(line_read, 2)
-                # print(prog_step)
                 self.ram[address] = prog_step
-                # print(f'ram[{address}] = {self.ram[address]}')
+
                 address += 1
 
     # Run the CPU
@@ -134,8 +132,8 @@ class CPU:
         while True:
             # Initialize the program
             self.ir = self.ram[self.pc]
-            # Get the alu and PC set mask
-            # is_alu = (self.ir & 0b00100000) >> 5
+
+            # Get the PC set mask (for jump addresses)
             set_pc = (self.ir & 0b00010000) >> 4
             # print(f'set_pc = {set_pc}')
 
@@ -144,7 +142,6 @@ class CPU:
             op_b = self.ram[self.pc + 2]
 
             # Execute the opcode in the opcode dict
-
             self.opcodes[self.ir](op_a, op_b)
             # Increment or set the PC
             if set_pc == 0:
