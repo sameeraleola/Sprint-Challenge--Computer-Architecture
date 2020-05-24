@@ -161,6 +161,7 @@ class CPU:
             self.reg[reg_a] *= self.reg[reg_b]
 
         elif op == "CMP":
+            # CMP is only testing for equal and not equal so only two conditions needed.
             if reg_a == reg_b:
                 self.fl = 0b0000001
             else:
