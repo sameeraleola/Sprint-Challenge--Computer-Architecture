@@ -138,9 +138,6 @@ class CPU:
                 # print(f'ram[{address}] = {self.ram[address]}')
                 address += 1
 
-            # is_alu = (self.ir & 0b00100000) >> 5)
-            # set_pc = (self.ir & 0b00010000) >> 4) 
-
     # Run the CPU
     def run(self):
         while True:
